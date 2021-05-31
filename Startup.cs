@@ -51,7 +51,7 @@ namespace GalaxyAudioPlayer
                 .AllowAnyHeader()
                 .SetIsOriginAllowed(origin => true)
                 .AllowCredentials());
-
+           
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }

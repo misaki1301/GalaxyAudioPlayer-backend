@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GalaxyAudioPlayer.Models;
 using Microsoft.AspNetCore.Cors;
+using Amazon.S3;
+using Amazon.Runtime;
+using System.IO;
+using Amazon.S3.Transfer;
 
 namespace GalaxyAudioPlayer.Controllers
 {
@@ -81,12 +85,43 @@ namespace GalaxyAudioPlayer.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        public async Task<ActionResult<Song>> PostSong(Song song)
+        [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
+        public async Task<ActionResult<Song>> PostSong([FromForm] SongModel form)
         {
-            _context.Songs.Add(song);
+            var credentials = new BasicAWSCredentials("BHO2CMN6NLCDQAN2K33S", "b6PbcGOCOKSvLvbqdK6x6wZi8uXkNHczouRCDxbOIZ8");
+            var config = new AmazonS3Config
+            {
+                ServiceURL = "https://nyc3.digitaloceanspaces.com"
+            };
+
+            using var client = new AmazonS3Client(credentials, config);
+            await using var newMemoryStream = new MemoryStream();
+            form.Song.CopyTo(newMemoryStream);
+
+            var uploadRequest = new TransferUtilityUploadRequest
+            {
+                InputStream = newMemoryStream,
+                Key = form.Song.FileName,
+                BucketName = "korosuki-res/music",
+                CannedACL = S3CannedACL.PublicRead
+            };
+
+            var fileTransferUtility = new TransferUtility(client);
+            await fileTransferUtility.UploadAsync(uploadRequest);
+            
+            var item = new Song
+            {
+                Name = form.Name,
+                Duration = 1231000,
+                Artist = _context.Artists.FirstOrDefault(x =>x.Id.Equals(form.ArtistId)),
+                FilePath = "https://korosuki-res.nyc3.digitaloceanspaces.com/music/"+form.Song.FileName,
+                ImageCover = "https://img.pngio.com/cd-case-png-transparent-cd-case-png-image-free-download-pngkey-cd-case-png-300_262.png"
+            };
+
+            _context.Songs.Add(item);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetSong", new { id = song.Id }, song);
+            return CreatedAtAction("GetSong", new { id = item.Id }, item);
         }
 
         // DELETE: api/Songs/5
