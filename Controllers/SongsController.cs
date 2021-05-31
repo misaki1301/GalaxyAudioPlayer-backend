@@ -22,7 +22,6 @@ namespace GalaxyAudioPlayer.Controllers
         }
 
         // GET: api/Songs
-        [DisableCors]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Song>>> GetSongs()
         {
@@ -31,7 +30,6 @@ namespace GalaxyAudioPlayer.Controllers
         }
 
         // GET: api/Songs/5
-        [DisableCors]
         [HttpGet("{id}")]
         public async Task<ActionResult<Song>> GetSong(long id)
         {
