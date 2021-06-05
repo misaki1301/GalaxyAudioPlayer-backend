@@ -83,7 +83,7 @@ namespace GalaxyAudioPlayer.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        [RequestFormLimits(ValueLengthLimit = int.MaxValue, MultipartBodyLengthLimit = int.MaxValue)]
+        [DisableRequestSizeLimit]
         public async Task<ActionResult<Song>> PostSong([FromForm] SongModel form)
         {
             var credentials = new BasicAWSCredentials("BHO2CMN6NLCDQAN2K33S", "b6PbcGOCOKSvLvbqdK6x6wZi8uXkNHczouRCDxbOIZ8");
