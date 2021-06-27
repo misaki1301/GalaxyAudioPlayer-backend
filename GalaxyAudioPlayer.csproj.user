@@ -5,5 +5,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <ActiveDebugProfile>GalaxyAudioPlayer</ActiveDebugProfile>
+    <NameOfLastUsedPublishProfile>C:\Users\paulf\Source\Repos\misaki1301\GalaxyAudioPlayer-backend\Properties\PublishProfiles\FTPProfile.pubxml</NameOfLastUsedPublishProfile>
+    <Controller_SelectedScaffolderID>ApiControllerWithContextScaffolder</Controller_SelectedScaffolderID>
+    <Controller_SelectedScaffolderCategoryPath>root/Common/Api</Controller_SelectedScaffolderCategoryPath>
+    <WebStackScaffolding_ControllerDialogWidth>650</WebStackScaffolding_ControllerDialogWidth>
   </PropertyGroup>
 </Project>

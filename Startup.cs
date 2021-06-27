@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GalaxyAudioPlayer.Helpers;
 using GalaxyAudioPlayer.Models;
+using GalaxyAudioPlayer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,7 +36,12 @@ namespace GalaxyAudioPlayer
                     builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
                 });
             });
-            services.AddDbContext<SongContext>(opt => 
+
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
+            services.AddScoped<IUserService, UserService>();
+
+            services.AddDbContext<Context>(opt => 
                 opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers().AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             
@@ -54,6 +61,8 @@ namespace GalaxyAudioPlayer
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

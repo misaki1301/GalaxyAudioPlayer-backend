@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GalaxyAudioPlayer.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20210414145128_UpdateTableSong")]
-    partial class UpdateTableSong
+    [Migration("20210627053407_CreateUsersTable")]
+    partial class CreateUsersTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,6 +66,27 @@ namespace GalaxyAudioPlayer.Migrations
                     b.HasIndex("ArtistId");
 
                     b.ToTable("Songs");
+                });
+
+            modelBuilder.Entity("GalaxyAudioPlayer.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("ImageProfile")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("GalaxyAudioPlayer.Models.Song", b =>

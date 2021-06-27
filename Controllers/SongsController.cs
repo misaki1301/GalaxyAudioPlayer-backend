@@ -18,9 +18,9 @@ namespace GalaxyAudioPlayer.Controllers
     [ApiController]
     public class SongsController : ControllerBase
     {
-        private readonly SongContext _context;
+        private readonly Context _context;
 
-        public SongsController(SongContext context)
+        public SongsController(Context context)
         {
             _context = context;
         }

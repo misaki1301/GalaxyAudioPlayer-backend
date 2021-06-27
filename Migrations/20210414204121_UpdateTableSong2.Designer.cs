@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GalaxyAudioPlayer.Migrations
 {
-    [DbContext(typeof(SongContext))]
+    [DbContext(typeof(Context))]
     [Migration("20210414204121_UpdateTableSong2")]
     partial class UpdateTableSong2
     {
