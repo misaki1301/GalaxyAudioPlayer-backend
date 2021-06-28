@@ -97,7 +97,7 @@ namespace GalaxyAudioPlayer.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(RegisterUserRequest user)
         {
-            user.Password = BC.HashPassword(user.Password);
+            user.Password = BC.HashPassword(user.Password, 10);
             var imageProfile = "";
             var newUser = new User
             {

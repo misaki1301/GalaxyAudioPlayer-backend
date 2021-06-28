@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Logging;
 
 namespace GalaxyAudioPlayer
 {
@@ -36,7 +37,7 @@ namespace GalaxyAudioPlayer
                     builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
                 });
             });
-
+            IdentityModelEventSource.ShowPII = true;
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
 
             services.AddScoped<IUserService, UserService>();
