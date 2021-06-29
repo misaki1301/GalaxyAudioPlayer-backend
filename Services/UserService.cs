@@ -19,7 +19,8 @@ namespace GalaxyAudioPlayer.Services
     {
         Task<AuthenticateResponse> Authenticate(AuthenticateRequest model);
         Task<IEnumerable<User>> GetAll();
-        Task<User> GetById(int id);
+        User GetById(int id);
+        Task<User> IdentifyUser(string authHeader);
 
     }
     public class UserService : IUserService
@@ -56,9 +57,32 @@ namespace GalaxyAudioPlayer.Services
             return await _context.Users.ToListAsync();
         }
 
-        public async Task<User> GetById(int id)
+        public User GetById(int id)
         {
-            return await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+            return _context.Users.FirstOrDefault(x => x.Id == id);
+        }
+
+        public async Task<User> IdentifyUser(string authHeader)
+        {
+            var id = ExtractFromJwtToken(authHeader);
+            if (id != null)
+            {
+                return await _context.Users.FirstOrDefaultAsync(x => x.Id == int.Parse(id));
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private string ExtractFromJwtToken(string authHeader)
+        {
+            var handler = new JwtSecurityTokenHandler();
+                authHeader = authHeader.Replace("Bearer ", "");
+                var jsonToken = handler.ReadToken(authHeader);
+                var tokenSec = handler.ReadToken(authHeader) as JwtSecurityToken;
+                var id = tokenSec?.Claims.First(x => x.Type == "id").Value;
+                return id;
         }
 
         private string GenerateJwtToken(User user)
@@ -68,7 +92,7 @@ namespace GalaxyAudioPlayer.Services
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {new Claim("id", user.Id.ToString())}),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddMonths(12),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key),
                     SecurityAlgorithms.HmacSha256Signature)
             };

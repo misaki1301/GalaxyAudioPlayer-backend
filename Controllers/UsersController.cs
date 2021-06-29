@@ -35,6 +35,20 @@ namespace GalaxyAudioPlayer.Controllers
 
         }
 
+        [Authorize]
+        [HttpGet("identifyByToken")]
+        public async Task<ActionResult> IdentifyUserByToken()
+        {
+            string authHeader = Request.Headers["Authorization"];
+            var response = await _userService.IdentifyUser(authHeader);
+            if (response == null)
+            {
+                return BadRequest(new {message = "User not found or doesn't exists"});
+            }
+
+            return Ok(response);
+        }
+
         // GET: api/Users
         [Authorize]
         [HttpGet]
