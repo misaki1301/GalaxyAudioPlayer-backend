@@ -105,5 +105,11 @@ namespace GalaxyAudioPlayer.Controllers
         {
             return _context.Artists.Any(e => e.Id == id);
         }
+
+        [HttpPost("getArtistBySlug")]
+        public async Task<ActionResult<Artist>> GetArtistBySlug(SlugModel model)
+        {
+            return await _context.Artists.FirstOrDefaultAsync(x => x.Name.ToLower().Replace(" ", "-") == model.slug);
+        }
     }
 }
